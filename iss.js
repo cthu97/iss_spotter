@@ -28,4 +28,21 @@ const fetchCoordsByIP = (ip, callback) => {
   });
 };
 
-module.exports = { fetchMyIP, fetchCoordsByIP };
+const fetchISSFlyOverTimes = (coords, callback) => {
+  const url = `http://api.open-notify.org/iss/v1/?lat=${coords.latitude}&lon=${coords.longitude}`;
+
+  request(url, (error, response, body) => {
+
+    if (error) return callback(error, null);
+    
+    if (response.statusCode !== 200) {
+      callback(Error(`Status code ${response.statusCode} when fetching ISS pass times: ${body}`), null)
+    }
+    const passes = JSON.parse(body).response;
+    callback(null, passes);
+  })
+}
+
+
+module.exports = { fetchMyIP, fetchISSFlyOverTimes };
+
